@@ -23,7 +23,7 @@ def get_key_path(package_name: str, key_file: str) -> str:
 
 
 def get_scenario_path(package_name: str) -> str:
-    os.path.join(get_package_path(package_name), 'scenarios')
+    return os.path.join(get_package_path(package_name), 'scenarios')
 
 
 def get_configuration(package_name: str) -> dict:
