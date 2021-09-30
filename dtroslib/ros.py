@@ -124,22 +124,25 @@ class DTNode(NodeBase, metaclass=ABCMeta):
 
         # Publish message
         if targets:
-            generated_message = self.generate_message(targets, generated_content_names, generated_contents)
+            id = header['id']
+            generated_message = self.generate_message(id, targets, generated_content_names, generated_contents)
             self.publish(self.publish_message, json.dumps(generated_message, ensure_ascii=False))
             rospy.loginfo(f'Published message: {generated_message}')
 
     # Generate DeepTask ROS module output message
     def generate_message(self,
+                         id: int,
                          targets: list,
                          content_names: list,
                          contents: Dict[str, dict]) -> dict:
 
         message = {
             'header': {
+                'id': id,
                 'timestamp': timestamp(),
                 'source': self.source_name,
                 'target': targets,
-                'content': content_names,
+                'content': content_names
             }
         }
 
