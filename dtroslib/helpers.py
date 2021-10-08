@@ -1,8 +1,8 @@
-import os
-import time
-import re
 import json
+import os
+import re
 import rospkg
+import time
 from xml.etree.ElementTree import Element, parse
 
 
