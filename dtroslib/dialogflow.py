@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import os
 from google.cloud import dialogflow_v2 as dialogflow
 
