@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name='dtroslib',
-    version='1.1.0',
+    version='1.2.0',
     author='Hanyang University',
     url='https://github.com/DeepTaskHY/ROS.git',
     packages=setuptools.find_packages(),
