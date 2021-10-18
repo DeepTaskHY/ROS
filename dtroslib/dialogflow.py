@@ -49,6 +49,17 @@ class DialogflowClient:
     def language_code(self) -> str:
         return self.__language_code
 
+    def trigger_intent_event(self, event: str) -> dialogflow.types.DetectIntentResponse:
+        event_input = dialogflow.types.EventInput(name=event, language_code=self.language_code)
+        query_input = dialogflow.types.QueryInput(event=event_input)
+
+        response = self.client.detect_intent(request={
+            'session': self.session,
+            'query_input': query_input
+        })
+
+        return response
+
     def detect_intent_text(self, text: str) -> dialogflow.types.DetectIntentResponse:
         text_input = dialogflow.types.TextInput(text=text, language_code=self.language_code)
         query_input = dialogflow.types.QueryInput(text=text_input)
