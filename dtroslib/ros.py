@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import json
 import rospy
+import warnings
 from abc import *
 from std_msgs.msg import String
 from typing import Dict, Tuple
@@ -122,20 +123,26 @@ class DTNode(NodeBase, metaclass=ABCMeta):
             return
 
         contents = {content_name: received_message[content_name] for content_name in content_names}
-        targets, generated_content_names, generated_contents = self.generate_content(source, content_names, contents)
+
+        try:
+            targets, generated_contents = self.generate_contents(source, contents)
+        except NotImplementedError:
+            targets, _, generated_contents = self.generate_content(source, content_names, contents)
 
         # Publish message
         if targets:
             id = header['id']
-            generated_message = self.generate_message(id, targets, generated_content_names, generated_contents)
-            self.publish(self.publish_message, json.dumps(generated_message, ensure_ascii=False))
+            generated_message = self.generate_message(id, targets, generated_contents)
+            generated_message_json = json.dumps(generated_message, ensure_ascii=False)
+
+            self.publish(self.publish_message, generated_message_json)
+
             rospy.loginfo(f'Published message: {generated_message}')
 
     # Generate DeepTask ROS module output message
     def generate_message(self,
                          id: int,
                          targets: list,
-                         content_names: list,
                          contents: Dict[str, dict]) -> dict:
 
         message = {
@@ -144,7 +151,7 @@ class DTNode(NodeBase, metaclass=ABCMeta):
                 'timestamp': timestamp(),
                 'source': self.source_name,
                 'target': targets,
-                'content': content_names
+                'content': contents.keys()
             }
         }
 
@@ -153,10 +160,19 @@ class DTNode(NodeBase, metaclass=ABCMeta):
         return message
 
     # Generate specific ROS module output content
-    @abstractmethod
     def generate_content(self,
                          source: str,
                          content_names: list,
                          content: Dict[str, dict]) -> Tuple[list, list, Dict[str, dict]]:
 
-        pass
+        warnings.warn('The \'generate_content\' function is deprecated.' +
+                      'Please use \'generate_contents\' function instead.',
+                      DeprecationWarning)
+
+        raise NotImplementedError()
+
+    def generate_contents(self,
+                          source: str,
+                          content: Dict[str, dict]) -> Tuple[List[str], Dict[str, dict]]:
+
+        raise NotImplementedError()
