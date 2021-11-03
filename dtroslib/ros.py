@@ -5,7 +5,7 @@ import rospy
 import warnings
 from abc import *
 from std_msgs.msg import String
-from typing import Dict, Tuple
+from typing import List, Dict, Tuple
 
 from .helpers import timestamp
 
