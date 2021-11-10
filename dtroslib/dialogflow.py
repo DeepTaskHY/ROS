@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import os
+import uuid
 from google.cloud import dialogflow_v2 as dialogflow
 
 
@@ -13,9 +14,9 @@ class DialogflowClient:
 
     def __init__(self,
                  project_id: str,
-                 session_id: str,
                  key_path: str,
-                 language_code: str):
+                 session_id: str = None,
+                 language_code: str = 'ko'):
 
         self.__project_id = project_id
         self.__session_id = session_id
@@ -29,6 +30,9 @@ class DialogflowClient:
 
     @property
     def session_id(self) -> str:
+        if not self.__session_id:
+            self.__session_id = str(uuid.uuid4())
+
         return self.__session_id
 
     @property
