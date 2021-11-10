@@ -145,13 +145,15 @@ class DTNode(NodeBase, metaclass=ABCMeta):
                          targets: list,
                          contents: Dict[str, dict]) -> dict:
 
+        content_names = list(contents.keys())
+
         message = {
             'header': {
                 'id': id,
                 'timestamp': timestamp(),
                 'source': self.source_name,
                 'target': targets,
-                'content': contents.keys()
+                'content': content_names
             }
         }
 
